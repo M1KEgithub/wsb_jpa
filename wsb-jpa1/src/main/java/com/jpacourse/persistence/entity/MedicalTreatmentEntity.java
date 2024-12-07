@@ -24,6 +24,8 @@ public class MedicalTreatmentEntity {
 
 	@Enumerated(EnumType.STRING)
 	private TreatmentType type;
+	// Relacja jednostronna od strony dziecka (brak zwrotnej relacji w VisitEntity)
+	// Ta encja jest wyłącznie powiązana przez Visit
 
 	public Long getId() {
 		return id;
