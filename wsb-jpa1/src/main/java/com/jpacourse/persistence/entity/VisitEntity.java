@@ -1,41 +1,35 @@
 package com.jpacourse.persistence.entity;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
-
 @Entity
-@Table(name = "VISIT")
+@Table(name = "visit_entity")
 public class VisitEntity {
-
-	// Relacja dwustronna (Visit jest dzieckiem, Patient jest rodzicem)
-	@ManyToOne
-	@JoinColumn(name = "patient_id", nullable = false)
-	private PatientEntity patient;
-
-	// Relacja dwustronna (Visit jest dzieckiem, Doctor jest rodzicem)
-	@ManyToOne
-	@JoinColumn(name = "doctor_id", nullable = false)
-	private DoctorEntity doctor;
-
-	// Relacja jednostronna od strony rodzica (Visit jest właścicielem relacji)
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "visit_id", nullable = false)
-	private List<MedicalTreatmentEntity> treatments = new ArrayList<>();
-
-
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String description;
+	private Date visitDate;
 
-	@Column(nullable = false)
-	private LocalDateTime time;
+	@ManyToOne
+	@JoinColumn(name = "doctor_id")
+	private DoctorEntity doctor;
 
+	@ManyToMany
+	@JoinTable(
+			name = "visit_treatments",
+			joinColumns = @JoinColumn(name = "visit_id"),
+			inverseJoinColumns = @JoinColumn(name = "treatment_id")
+	)
+	private List<MedicalTreatment> treatments;
+
+	@ManyToOne
+	@JoinColumn(name = "patient_id")
+	private PatientEntity patient;
+
+	// Gettery i settery
 	public Long getId() {
 		return id;
 	}
@@ -44,20 +38,35 @@ public class VisitEntity {
 		this.id = id;
 	}
 
-	public String getDescription() {
-		return description;
+	public Date getVisitDate() {
+		return visitDate;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setVisitDate(Date visitDate) {
+		this.visitDate = visitDate;
 	}
 
-	public LocalDateTime getTime() {
-		return time;
+	public DoctorEntity getDoctor() {
+		return doctor;
 	}
 
-	public void setTime(LocalDateTime time) {
-		this.time = time;
+	public void setDoctor(DoctorEntity doctor) {
+		this.doctor = doctor;
 	}
 
+	public List<MedicalTreatment> getTreatments() {
+		return treatments;
+	}
+
+	public void setTreatments(List<MedicalTreatment> treatments) {
+		this.treatments = treatments;
+	}
+
+	public PatientEntity getPatient() {
+		return patient;
+	}
+
+	public void setPatient(PatientEntity patient) {
+		this.patient = patient;
+	}
 }

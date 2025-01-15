@@ -1,46 +1,24 @@
 package com.jpacourse.persistence.entity;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import javax.persistence.*;
 import java.util.List;
 
-import javax.persistence.*;
-
 @Entity
-@Table(name = "PATIENT")
+@Table(name="patient_entity")
 public class PatientEntity {
-
-	// Relacja jednostronna od strony dziecka (Patient jest właścicielem relacji)
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
-	private AddressEntity address;
-
-	// Relacja dwustronna (Patient jest dzieckiem, Visit jest rodzicem)
-	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<VisitEntity> visits = new ArrayList<>();
-
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
 	private String firstName;
-
-	@Column(nullable = false)
 	private String lastName;
 
-	@Column(nullable = false)
-	private String telephoneNumber;
+	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<VisitEntity> visits;
 
-	private String email;
+	private int age; // Nowe pole wymagane w zadaniu
 
-	@Column(nullable = false)
-	private String patientNumber;
-
-	@Column(nullable = false)
-	private LocalDate dateOfBirth;
-
+	// Gettery i settery
 	public Long getId() {
 		return id;
 	}
@@ -65,36 +43,19 @@ public class PatientEntity {
 		this.lastName = lastName;
 	}
 
-	public String getTelephoneNumber() {
-		return telephoneNumber;
+	public List<VisitEntity> getVisits() {
+		return visits;
 	}
 
-	public void setTelephoneNumber(String telephoneNumber) {
-		this.telephoneNumber = telephoneNumber;
+	public void setVisits(List<VisitEntity> visits) {
+		this.visits = visits;
 	}
 
-	public String getEmail() {
-		return email;
+	public int getAge() {
+		return age;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setAge(int age) {
+		this.age = age;
 	}
-
-	public String getPatientNumber() {
-		return patientNumber;
-	}
-
-	public void setPatientNumber(String patientNumber) {
-		this.patientNumber = patientNumber;
-	}
-
-	public LocalDate getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(LocalDate dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
-
 }
